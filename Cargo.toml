@@ -2,11 +2,13 @@
 name = "ratelimiter-rs"
 version = "0.1.0"
 edition = "2021"
+authors = ["heqingpan <heqingpan@126.com>"]
+license = "MIT/Apache-2.0"
+description = "a lite ratelimit utils for rust"
+repository = "https://github.com/heqingpan/ratelimiter-rs"
+readme = "README.md"
+keywords = ["ratelimit", "qps"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[[example]]
-name="ratelimiter"
-path = "examples/ratelimiter.rs"
 
 [dependencies]
