@@ -23,7 +23,7 @@ impl RateUnit {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Default)]
 pub struct RateLimiter {
     pub(crate) rate_to_ms_conversion:i32,
     pub(crate) consumed_tokens:i32,
@@ -89,7 +89,7 @@ impl RateLimiter {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Default)]
 pub struct QpsLimiter{
     inner_limit:RateLimiter,
     burst_size:i32,
@@ -97,17 +97,26 @@ pub struct QpsLimiter{
 }
 
 impl QpsLimiter {
-    pub fn new(qps_limit:i64) -> Self {
-        let burst_size:i32 = cmp::max(1,qps_limit as i32/10);
+    pub fn new(qps_limit:u64) -> Self {
         Self {
+            burst_size: 1,
             inner_limit: RateLimiter::new(),
-            burst_size,
-            qps_limit
+            qps_limit: qps_limit as i64,
         }
     }
 
+    pub fn set_burst_size(mut self,burst_size:u32) -> Self{
+        self.burst_size = cmp::max(1,burst_size as i32);
+        self
+    }
+
+    pub fn set_second_limit(mut self,qps_limit:u64) -> Self{
+        self.qps_limit = qps_limit as i64;
+        self
+    }
+
     pub fn acquire(&mut self) -> bool {
-        self.inner_limit.acquire(self.burst_size, self.qps_limit)
+        self.inner_limit.acquire(self.burst_size , self.qps_limit)
     }
     
     pub fn reset(&mut self){
