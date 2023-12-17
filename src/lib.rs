@@ -116,6 +116,14 @@ impl RateLimiter {
     pub fn get_last_refill_time(&self) -> i64 {
         self.last_refill_time
     }
+
+    pub fn get_to_save(&self) -> (i32, i32, i64) {
+        (
+            self.rate_to_ms_conversion,
+            self.consumed_tokens,
+            self.last_refill_time,
+        )
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -265,6 +273,14 @@ impl AtomicRateLimiter {
 
     pub fn get_last_refill_time(&self) -> i64 {
         self.last_refill_time.load(Relaxed)
+    }
+
+    pub fn get_to_save(&self) -> (i32, i32, i64) {
+        (
+            self.rate_to_ms_conversion,
+            self.get_consumed_tokens(),
+            self.get_last_refill_time(),
+        )
     }
 }
 
